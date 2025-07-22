@@ -1,0 +1,176 @@
+/* === Robotic AI Login Styling === */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+
+body {
+    background-image: url("https://www.transparenttextures.com/patterns/graph-paper.png");
+    background-color: #0d1117;
+    background-size: cover;
+    background-attachment: fixed;
+    font-family: 'Orbitron', sans-serif;
+    color: #c9d1d9;
+}
+
+/* Only center layout on the welcome screen */
+.welcome-screen main, .welcome-screen .block-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 90vh;
+}
+
+h1 {
+    font-size: 2.8rem;
+    color: #00ffee;
+    text-shadow: 0 0 8px #00ffee, 0 0 2px #00ffee;
+    font-family: 'Orbitron', sans-serif;
+}
+
+/* Input Fields */
+input, textarea {
+    background-color: #0f172a !important;
+    border: 1px solid #00ffee !important;
+    border-radius: 6px;
+    color: #c9d1d9 !important;
+    font-family: 'Orbitron', monospace;
+}
+
+/* Password Field Eye Icon */
+button[title="Show password"],
+button[title="Hide password"] {
+    filter: invert(100%);
+}
+
+/* Login Button */
+button.stButton {
+    background-color: #00ffee !important;
+    color: #0d1117 !important;
+    border-radius: 8px !important;
+    font-weight: bold !important;
+    font-family: 'Orbitron', sans-serif !important;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px #00ffee;
+}
+button.stButton:hover {
+    background-color: #00ccdd !important;
+    box-shadow: 0 0 15px #00ffee, 0 0 10px #00ffee;
+}
+
+/* === Get Started Button Custom Style === */
+div.stButton > button:first-child {
+    background: linear-gradient(135deg, #00ffee 0%, #00ccdd 100%) !important;
+    color: #0d1117 !important;
+    border: none !important;
+    border-radius: 10px !important;
+    font-family: 'Orbitron', sans-serif !important;
+    font-size: 1.2rem !important;
+    font-weight: bold !important;
+    padding: 0.75rem 2rem !important;
+    box-shadow: 0 0 15px #00ffee88;
+    transition: all 0.3s ease-in-out;
+}
+
+div.stButton > button:first-child:hover {
+    background: linear-gradient(135deg, #00ccdd 0%, #00ffee 100%) !important;
+    box-shadow: 0 0 20px #00ffee, 0 0 10px #00ffee;
+    transform: translateY(-2px) scale(1.02);
+}
+
+/* Floating Animation */
+.floating {
+    animation: floaty 6s ease-in-out infinite;
+}
+@keyframes floaty {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0); }
+}
+
+/* Remove Streamlit default max-width for login container */
+section.main {
+    max-width: none !important;
+    padding: 2rem !important;
+    border: 1px solid #00ffee44;
+    border-radius: 12px;
+    background: rgba(13, 17, 23, 0.8);
+    box-shadow: 0 0 30px rgba(0, 255, 238, 0.2);
+}
+
+/* === Editable OCR Overlay Styling === */
+.ocr-word {
+    display: inline-block;
+    padding: 2px 6px;
+    margin: 2px;
+    border: 1px dashed #00ffee;
+    border-radius: 4px;
+    background: rgba(0, 255, 238, 0.1);
+    color: #00ffee;
+    font-family: 'Orbitron', monospace;
+    font-size: 1rem;
+    cursor: text;
+    outline: none;
+    transition: background 0.2s ease;
+}
+
+.ocr-word:hover {
+    background: rgba(0, 255, 238, 0.2);
+    box-shadow: 0 0 5px #00ffee88;
+}
+
+/* Editable Full Text Area */
+#editable {
+    padding: 1rem;
+    border: 1px solid #00ffee;
+    border-radius: 10px;
+    background-color: #0f172a;
+    color: #00ffee;
+    font-family: 'Orbitron', monospace;
+    white-space: pre-wrap;
+    min-height: 200px;
+}
+
+/* === Hide Streamlit Sidebar === */
+.stSidebar, .css-1d391kg, .css-1lcbmhc {
+    display: none !important;
+}
+
+/* Get Started Button Styling */
+button[kind="primary"] {
+    background-color: #00ffee !important;
+    color: #0d1117 !important;
+    font-size: 1.1rem !important;
+    font-weight: bold !important;
+    padding: 0.6rem 1.5rem !important;
+    border-radius: 10px !important;
+    box-shadow: 0 0 15px #00ffee88;
+    transition: all 0.3s ease;
+    font-family: 'Orbitron', sans-serif !important;
+}
+
+button[kind="primary"]:hover {
+    background-color: #00ccdd !important;
+    box-shadow: 0 0 20px #00ffeeaa;
+}
+
+/* === Drag File Glow Effect === */
+.upload-box {
+    padding: 1rem;
+    border: 2px dashed #444;
+    border-radius: 10px;
+    transition: all 0.4s ease-in-out;
+    background-color: #1c1c1c;
+    margin-bottom: 1rem;
+}
+
+.upload-box.drag-glow {
+    border-color: #00ffee;
+    box-shadow: 0 0 20px #00ffeeaa, 0 0 40px #00ffee55 inset;
+    background-color: #111822;
+    animation: pulse-glow 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse-glow {
+    0% { box-shadow: 0 0 20px #00ffeeaa, 0 0 40px #00ffee55 inset; }
+    50% { box-shadow: 0 0 30px #00ffee, 0 0 50px #00ffee88 inset; }
+    100% { box-shadow: 0 0 20px #00ffeeaa, 0 0 40px #00ffee55 inset; }
+}

@@ -1,0 +1,9 @@
+streamlit
+pytesseract
+Pillow
+spacy
+streamlit-lottie
+python-docx
+fpdf
+pdf2image
+streamlit-js-eval
