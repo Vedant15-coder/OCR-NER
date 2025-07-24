@@ -1,4 +1,5 @@
 streamlit
+reportlab
 pytesseract
 Pillow
 spacy
@@ -7,3 +8,8 @@ python-docx
 fpdf
 pdf2image
 streamlit-js-eval
+
+
+
+
+

@@ -25,6 +25,8 @@ import pdfplumber
 import pandas as pd
 import streamlit as st
 import streamlit.components.v1 as components
+from pdf2docx import Converter
+
 
 # OCR Setup
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
@@ -338,7 +340,7 @@ with tab2:
 # --- Word to PDF Tab ---
 with tab3:
     st.header("🔁 Convert Word (.docx) ↔ PDF")
-    
+
     conversion_type = st.radio("Choose conversion type:", ["Word to PDF", "PDF to Word"], horizontal=True)
 
     uploaded_file = st.file_uploader(
@@ -347,43 +349,76 @@ with tab3:
         help="Upload .docx for Word to PDF or .pdf for PDF to Word",
     )
 
-    if uploaded_file:
+    if uploaded_file is not None:
         file_name = uploaded_file.name
 
         if conversion_type == "Word to PDF" and file_name.endswith(".docx"):
-            # Save uploaded docx temporarily
-            with tempfile.TemporaryDirectory() as tmpdirname:
-                docx_path = os.path.join(tmpdirname, file_name)
-                with open(docx_path, "wb") as f:
-                    f.write(uploaded_file.read())
+            try:
+                import pythoncom
+                from docx2pdf import convert
+                import os, tempfile
 
-                # Convert DOCX to PDF using docx2pdf
-                pdf_path = os.path.join(tmpdirname, "converted.pdf")
-                pythoncom.CoInitialize()
-                convert(docx_path, pdf_path)
-                pythoncom.CoUninitialize()
+                with tempfile.TemporaryDirectory() as tmpdirname:
+                    docx_path = os.path.join(tmpdirname, file_name)
+                    with open(docx_path, "wb") as f:
+                        f.write(uploaded_file.read())
 
-                # Read converted PDF and offer download
-                with open(pdf_path, "rb") as f:
-                    pdf_bytes = f.read()
+                    pdf_path = os.path.join(tmpdirname, "converted.pdf")
+                    pythoncom.CoInitialize()
+                    convert(docx_path, pdf_path)
+                    pythoncom.CoUninitialize()
 
-                st.success("✅ Word file converted to PDF with full formatting")
-                st.download_button("📥 Download PDF", data=pdf_bytes, file_name="converted.pdf", mime="application/pdf")
+                    with open(pdf_path, "rb") as f:
+                        pdf_bytes = f.read()
+
+                    st.success("✅ Word file converted to PDF with full formatting.")
+                    st.download_button(
+                        "📥 Download PDF",
+                        data=pdf_bytes,
+                        file_name="converted.pdf",
+                        mime="application/pdf",
+                        key="download_pdf_word_to_pdf"  # 👈 Unique key added here
+                    )
+            except Exception as e:
+                st.error(f"⚠️ Error during Word to PDF conversion: {e}")
 
         elif conversion_type == "PDF to Word" and file_name.endswith(".pdf"):
-            pdf_reader = PdfReader(uploaded_file)
-            doc = Document()
+            try:
+                from pdf2docx import Converter
+                import os, tempfile
 
-            for page in pdf_reader.pages:
-                doc.add_paragraph(page.extract_text())
+                with tempfile.TemporaryDirectory() as tmpdirname:
+                    pdf_path = os.path.join(tmpdirname, file_name)
+                    with open(pdf_path, "wb") as f:
+                        f.write(uploaded_file.read())
 
-            word_buffer = BytesIO()
-            doc.save(word_buffer)
-            st.success("✅ PDF file converted to Word")
-            st.download_button("📥 Download Word", data=word_buffer.getvalue(), file_name="converted.docx")
+                    docx_path = os.path.join(tmpdirname, "converted.docx")
 
+                    converter = Converter(pdf_path)
+                    converter.convert(docx_path)
+                    converter.close()
+
+                    with open(docx_path, "rb") as f:
+                        docx_bytes = f.read()
+
+                    st.success("✅ PDF file converted to Word format.")
+                    st.download_button(
+                        "📥 Download Word",
+                        data=docx_bytes,
+                        file_name="converted.docx",
+                        mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                        key="download_docx_pdf_to_word"  # 👈 Unique key added here
+                    )
+            except Exception as e:
+                st.error(f"⚠️ Error during PDF to Word conversion: {e}")
         else:
-            st.error("❌ File format doesn't match the selected conversion type.")
+            st.error("❌ Uploaded file type doesn't match selected conversion.")
+    else:
+        st.info("📤 Please upload a file to begin conversion.")
+
+
+
+
 # --- PDF ↔ Excel Tab ---
 with tab4:
     st.header("📄 PDF ↔ Excel Converter")
