@@ -1,13 +1,14 @@
 streamlit
 reportlab
-pytesseract
-Pillow
-spacy
-streamlit-lottie
+pdf2docx
 python-docx
-fpdf
-pdf2image
-streamlit-js-eval
+pytesseract
+spacy
+opencv-python
+pdfplumber
+openpyxl
+pandas
+
 
 
 
