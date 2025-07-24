@@ -18,7 +18,7 @@ import unicodedata
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 #from docx2pdf import convert
-import pythoncom
+#import pythoncom
 import tempfile
 import os
 import pdfplumber
@@ -26,6 +26,9 @@ import pandas as pd
 import streamlit as st
 import streamlit.components.v1 as components
 from pdf2docx import Converter
+from docx import Document
+from fpdf import FPDF
+
 
 
 # OCR Setup
