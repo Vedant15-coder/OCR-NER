@@ -17,7 +17,7 @@ import textwrap
 import unicodedata
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
-from docx2pdf import convert
+#from docx2pdf import convert
 import pythoncom
 import tempfile
 import os
@@ -337,6 +337,10 @@ with tab2:
     **Upload an image or PDF and extract + edit key entities instantly!**
     """)
 
+from docx import Document
+from fpdf import FPDF
+from io import BytesIO
+
 # --- Word to PDF Tab ---
 with tab3:
     st.header("🔁 Convert Word (.docx) ↔ PDF")
@@ -349,39 +353,39 @@ with tab3:
         help="Upload .docx for Word to PDF or .pdf for PDF to Word",
     )
 
+    # ------------------- Word to PDF Conversion -------------------
+    def convert_docx_to_pdf(docx_file):
+        doc = Document(docx_file)
+        pdf = FPDF()
+        pdf.add_page()
+        pdf.set_auto_page_break(auto=True, margin=15)
+        pdf.set_font("Arial", size=12)
+
+        for para in doc.paragraphs:
+            text = para.text.strip()
+            if text:
+                pdf.multi_cell(0, 10, text)
+
+        return pdf.output(dest="S").encode("latin-1")
+
     if uploaded_file is not None:
         file_name = uploaded_file.name
 
         if conversion_type == "Word to PDF" and file_name.endswith(".docx"):
             try:
-                import pythoncom
-                from docx2pdf import convert
-                import os, tempfile
-
-                with tempfile.TemporaryDirectory() as tmpdirname:
-                    docx_path = os.path.join(tmpdirname, file_name)
-                    with open(docx_path, "wb") as f:
-                        f.write(uploaded_file.read())
-
-                    pdf_path = os.path.join(tmpdirname, "converted.pdf")
-                    pythoncom.CoInitialize()
-                    convert(docx_path, pdf_path)
-                    pythoncom.CoUninitialize()
-
-                    with open(pdf_path, "rb") as f:
-                        pdf_bytes = f.read()
-
-                    st.success("✅ Word file converted to PDF with full formatting.")
-                    st.download_button(
-                        "📥 Download PDF",
-                        data=pdf_bytes,
-                        file_name="converted.pdf",
-                        mime="application/pdf",
-                        key="download_pdf_word_to_pdf"  # 👈 Unique key added here
-                    )
+                pdf_bytes = convert_docx_to_pdf(uploaded_file)
+                st.success("✅ Word file converted to PDF.")
+                st.download_button(
+                    "📥 Download PDF",
+                    data=pdf_bytes,
+                    file_name="converted.pdf",
+                    mime="application/pdf",
+                    key="download_pdf_word_to_pdf"
+                )
             except Exception as e:
                 st.error(f"⚠️ Error during Word to PDF conversion: {e}")
 
+        # ------------------- PDF to Word Conversion -------------------
         elif conversion_type == "PDF to Word" and file_name.endswith(".pdf"):
             try:
                 from pdf2docx import Converter
@@ -407,7 +411,7 @@ with tab3:
                         data=docx_bytes,
                         file_name="converted.docx",
                         mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                        key="download_docx_pdf_to_word"  # 👈 Unique key added here
+                        key="download_docx_pdf_to_word"
                     )
             except Exception as e:
                 st.error(f"⚠️ Error during PDF to Word conversion: {e}")
@@ -415,6 +419,7 @@ with tab3:
             st.error("❌ Uploaded file type doesn't match selected conversion.")
     else:
         st.info("📤 Please upload a file to begin conversion.")
+
 
 
 
